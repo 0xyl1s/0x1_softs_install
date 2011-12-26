@@ -9,11 +9,6 @@ require 'ec1/lib/toolkit/online.rb'
 include Ec1::Lib::Toolkit::Online
 
 ########################### >>>> Ec1_lib
-def e__symlink_create(original_filename, symlink_target)
-  abort unless e__is_a_file?(original_filename)
-  abort if e__is_a_symlink?(symlink_target)
-  File.symlink(original_filename, symlink_target)
-end
 ########################### <<<< Ec1_lib
 
 
