@@ -2,6 +2,8 @@
 # tested with ruby 1.9.2
 
 module Ec1 module Install
+
+class Blender
 require 'ec1/lib/toolkit/standard.rb'
 include Ec1::Lib::Toolkit::Standard
 require 'ec1/lib/toolkit/online.rb'
@@ -9,8 +11,6 @@ include Ec1::Lib::Toolkit::Online
 
 ########################### >>>> Ec1_lib
 ########################### <<<< Ec1_lib
-
-class Blender
 
 def initialize
 end
