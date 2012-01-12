@@ -1,5 +1,5 @@
 # encoding: utf-8
-# tested with ruby 1.9.2
+# tested with ruby 1.9.3
 
 module Ec1 module Install
 
@@ -25,6 +25,7 @@ def install_261_linux_x86_64
   puts "downloading blender_261_linux_x86_64: done!"
 
   mu_softs_installed_path = "#{ENV['HOME']}/.ec1/00mu/00sourcing/ec1_softs_installed"
+  # TODO: simplify download with e__http_download_and_save method
   soft_downloaded_dir_path = "#{mu_softs_installed_path}/blender/2.61/linux_x86_64/00install"
   abort "ERROR: #{soft_downloaded_dir_path} directory exists already" if e__is_a_dir?(soft_downloaded_dir_path)
   abort "ERROR: can't create directory #{soft_downloaded_dir_path}" unless e__mkdir_p(soft_downloaded_dir_path)
@@ -76,4 +77,4 @@ end end
 # 
 # </copyright/copyleft>
 # Project infos <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<# }}}
-#vim: foldmethod=marker
+#vim: ft=ruby
