@@ -2,8 +2,8 @@
 # encoding: utf-8
 # tested with ruby 1.9.3
 
-module Ec1 module Install
-require 'ec1/install/blender.rb'
+module X module Install
+require '0x1/install/blender.rb'
 
 Blender.new.install_261_linux_x86_64
 
