@@ -2,17 +2,15 @@
 # tested with ruby 1.9.3
 
 module X module Install
+require_relative '../0x1_lib.helper.rb'
 
 class Blender
-require '0x1/lib/toolkit/standard.rb'
-include X::Lib::Toolkit::Standard
-require '0x1/lib/toolkit/online.rb'
-include X::Lib::Toolkit::Online
 
 ########################### >>>> 0x1_lib
 ########################### <<<< 0x1_lib
 
 def initialize
+  x__load_modules([:standard, :online])
 end
 
 def install_261_linux_x86_64
