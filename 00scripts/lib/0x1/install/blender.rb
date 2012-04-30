@@ -66,62 +66,70 @@ module X module Users
 
     def install_process(l_version, l_platform)
       uri_raw = @blender_install_data[@version][@platform][0]
+      uri = x__parse_uri(uri_raw)
       digest = @blender_install_data[@version][@platform][1]
-      mu_softs_installed_path = "#{Dir.home}/.0x1/00mu/"+
-        "00sourcing/0x1_softs_installed"
-      soft_downloaded_dir_path = "#{mu_softs_installed_path}/blender/"+
+      downloaded_filename = x__filename_from_parsed_uri(uri)
+      downloaded_file_extension = '.tar.bz2'
+      downloaded_basename = File.basename(downloaded_filename,
+                                          downloaded_file_extension)
+      installed_path = "#{Dir.home}/.0x1/00mu/00sourcing/0x1_softs_installed"
+      install_path = "#{installed_path}/blender/"+
         "#{@version}/#{@platform}/00install"
-      if x__is_a_dir?(soft_downloaded_dir_path)
-        abort "ERROR: #{soft_downloaded_dir_path} directory exists already"
+      if x__is_a_dir?(install_path)
+        abort "E: directory exists already:\n#{install_path}"
       end
 
       puts "I: starting installation: blender #{@version} for #{@platform} ..."
 
-      uri = x__parse_uri(uri_raw)
-      puts "I: downloading blender_261_linux_x86_64..."
+      puts "I: downloading #{uri} ..."
       unless downloaded_content = x__http_download(uri)
-        abort "ERROR verifying dowloaded blender_261_linux_x86_64 digest!"
+        abort "E: error dowloading #{downloaded_filename}"
       end
 
-      unless x__mkdir_p(soft_downloaded_dir_path)
-        abort "ERROR: can't create directory #{soft_downloaded_dir_path}"
+      unless x__mkdir_p(install_path)
+        abort "E: can't create directory #{install_path}"
       end
-      soft_downloaded_path = "#{soft_downloaded_dir_path}/blender-2.61-linux-glibc27-x86_64.tar.bz2"
+      soft_downloaded_path = "#{install_path}/#{downloaded_filename}"
       unless x__file_write(downloaded_content, soft_downloaded_path)
-        abort "ERROR: can't write file #{soft_downloaded_path}"
+        abort "E: can't write file #{soft_downloaded_path}"
       end
       unless check_digest = x__file_read(soft_downloaded_path)
-        abort "ERROR: can't read downloaded file #{soft_downloaded_path}"
+        abort "E: can't read downloaded file #{soft_downloaded_path}"
       end
-      unless x__digest_create(check_digest) == digest
-        abort "ERROR verifying dowloaded blender_261_linux_x86_64 digest!"
+      checked_digest = x__digest_create(check_digest)
+      unless checked_digest == digest
+        abort "E: wrong digest for #{downloaded_filename} (checked digest:\n"+
+          "#{checked_digest} should be:\n#{digest})"
       end
-      puts "verified dowloaded blender_261_linux_x86_64 digest: done !"
-      soft_extract_dir_path = "#{mu_softs_installed_path}/blender/"+
-        "#{@version}/#{@platform}/00install/blender-2.61-linux-glibc27-x86_64"
+      puts "I: verified dowloaded #{downloaded_filename} digest: done !"
+
+      soft_extract_dir_path = "#{installed_path}/blender/"+
+        "#{@version}/#{@platform}/00install/#{downloaded_basename}"
       if x__is_a_dir?(soft_extract_dir_path)
-        abort "ERROR: extract path #{soft_extract_dir_path} exists already"
+        abort "E: extract path exists already:\n#{soft_extract_dir_path}"
       end
-      unless system "tar jxvf #{soft_downloaded_path} -C #{soft_downloaded_dir_path}"
-        abort "ERROR: can't extract #{soft_downloaded_path} on #{soft_installed_dir_path}"
+      unless system "tar jxvf #{soft_downloaded_path} -C #{install_path}"
+        abort "E: can't extract #{soft_downloaded_path} on "+
+          "#{soft_installed_dir_path}"
       end
-      soft_installed_dir_path = "#{mu_softs_installed_path}/blender/"+
+      soft_installed_dir_path = "#{installed_path}/blender/"+
         "#{@version}/#{@platform}/00installed"
       if x__is_a_dir?(soft_installed_dir_path)
-        abort "ERROR: #{soft_installed_dir_path} directory exists already"
+        abort "E: directory exists already:\n#{soft_installed_dir_path}"
       end
       unless x__dir_move(soft_extract_dir_path, soft_installed_dir_path)
-        abort "ERROR: can't move #{soft_extract_dir_path} to #{soft_installed_dir_path}"
+        abort "E: can't move #{soft_extract_dir_path} to "+
+          "#{soft_installed_dir_path}"
       end
       soft_executable_path = "#{soft_installed_dir_path}/blender"
-      soft_executable_symlink = "#{mu_softs_installed_path}/00bin/blender2.61_linux_x86_64"
+      symlink = "blender_#{@version}_#{@platform}"
+      soft_executable_symlink = "#{installed_path}/00bin/#{symlink}"
       unless x__symlink_create(soft_executable_path, soft_executable_symlink)
-        abort "ERROR: can't create symlink #{soft_executable_symlink} "+
+        abort "E: can't create symlink #{soft_executable_symlink} "+
           "pointing to #{soft_executable_path}"
       end
-
+      puts "I: installed: blender #{@version} for #{@platform} ..."
     end
-
   end
 
 end end
