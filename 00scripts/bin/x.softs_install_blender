@@ -2,10 +2,10 @@
 # encoding: utf-8
 # tested with ruby 1.9.3
 
-module X module Install
-require_relative '../lib/0x1/install/blender.rb'
+module X module Users
+  require_relative '../lib/0x1/install/blender.rb'
 
-Blender.new.install_261_linux_x86_64
+  BlenderInstall.new(ARGV)
 
 end end
 

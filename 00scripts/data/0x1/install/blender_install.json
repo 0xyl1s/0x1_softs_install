@@ -1,0 +1,17 @@
+{
+    "v261":
+	{"linux_x86_64":
+	    ["http://download.blender.org/release/Blender2.61/blender-2.61-linux-glibc27-x86_64.tar.bz2",
+	    "6b42d76da83a07e64695920e1163f70264ed67ee156f79b0786c97f927fde0e4"]
+	},
+    "v262":
+	{"linux_x86_64":
+	    ["http://download.blender.org/release/Blender2.62/blender-2.62-linux-glibc27-x86_64.tar.bz2",
+	    "c85b3c9ea760e53a21246f024a562114d31aa3e8eae67386ded31f654520741d"]
+	},
+    "v263":
+	{"linux_x86_64":
+	    ["http://download.blender.org/release/Blender2.63/blender-2.63-linux-glibc27-x86_64.tar.bz2",
+	    "dccb51acab05e8f4051ebe8f4fcbfe5770dfc92b28eec55afb653515d0323f16"]
+	}
+}
