@@ -10,7 +10,7 @@ module X module Users
       x__load_modules([:standard, :online])
       blender_install_data_load()
       arguments_process(a_argv)
-      install_process(@version, @platform)
+      install_process()
     end
 
     private
@@ -64,10 +64,9 @@ module X module Users
       @blender_install_data[l_version].keys
     end
 
-    def install_process(l_version, l_platform)
+    def install_process()
       uri_raw = @blender_install_data[@version][@platform][0]
       uri = x__parse_uri(uri_raw)
-      digest = @blender_install_data[@version][@platform][1]
       downloaded_filename = x__filename_from_parsed_uri(uri)
       downloaded_file_extension = '.tar.bz2'
       downloaded_basename = File.basename(downloaded_filename,
@@ -75,59 +74,44 @@ module X module Users
       installed_path = "#{Dir.home}/.0x1/00mu/00sourcing/0x1_softs_installed"
       install_path = "#{installed_path}/blender/"+
         "#{@version}/#{@platform}/00install"
-      if x__is_a_dir?(install_path)
-        abort "E: directory exists already:\n#{install_path}"
-      end
+      x__abort_if_is_a_dir(install_path, true)
 
       puts "I: starting installation: blender #{@version} for #{@platform} ..."
 
-      puts "I: downloading #{uri} ..."
-      unless downloaded_content = x__http_download(uri)
-        abort "E: error dowloading #{downloaded_filename}"
-      end
-
-      unless x__mkdir_p(install_path)
-        abort "E: can't create directory #{install_path}"
-      end
+      x__abort_unless_mkdir_p(install_path, true)
       soft_downloaded_path = "#{install_path}/#{downloaded_filename}"
-      unless x__file_write(downloaded_content, soft_downloaded_path)
-        abort "E: can't write file #{soft_downloaded_path}"
-      end
-      unless check_digest = x__file_read(soft_downloaded_path)
-        abort "E: can't read downloaded file #{soft_downloaded_path}"
-      end
-      checked_digest = x__digest_create(check_digest)
-      unless checked_digest == digest
-        abort "E: wrong digest for #{downloaded_filename} (checked digest:\n"+
-          "#{checked_digest} should be:\n#{digest})"
-      end
+      downloaded_content = x__http_download(uri)
+      x__abort_unless_file_write(downloaded_content,
+                                 soft_downloaded_path, true)
+
+      downloaded_file = x__file_read(soft_downloaded_path)
+
+      digest_source = @blender_install_data[@version][@platform][1]
+      digest_checked = x__digest_create(downloaded_file)
+      x__abort_unless_digest_checked(digest_source, digest_checked, true)
       puts "I: verified dowloaded #{downloaded_filename} digest: done !"
 
       soft_extract_dir_path = "#{installed_path}/blender/"+
         "#{@version}/#{@platform}/00install/#{downloaded_basename}"
-      if x__is_a_dir?(soft_extract_dir_path)
-        abort "E: extract path exists already:\n#{soft_extract_dir_path}"
-      end
-      unless system "tar jxvf #{soft_downloaded_path} -C #{install_path}"
-        abort "E: can't extract #{soft_downloaded_path} on "+
-          "#{soft_installed_dir_path}"
-      end
+      x__abort_if_is_a_dir(soft_extract_dir_path, true)
+
+      x__abort_unless_extract_tarbz2(soft_downloaded_path, install_path, true)
+
       soft_installed_dir_path = "#{installed_path}/blender/"+
         "#{@version}/#{@platform}/00installed"
-      if x__is_a_dir?(soft_installed_dir_path)
-        abort "E: directory exists already:\n#{soft_installed_dir_path}"
-      end
-      unless x__dir_move(soft_extract_dir_path, soft_installed_dir_path)
-        abort "E: can't move #{soft_extract_dir_path} to "+
-          "#{soft_installed_dir_path}"
-      end
+      x__abort_if_is_a_dir(soft_installed_dir_path, true)
+      x__abort_unless_dir_move(soft_extract_dir_path,
+                               soft_installed_dir_path, true)
+
       soft_executable_path = "#{soft_installed_dir_path}/blender"
       symlink = "blender_#{@version}_#{@platform}"
-      soft_executable_symlink = "#{installed_path}/00bin/#{symlink}"
-      unless x__symlink_create(soft_executable_path, soft_executable_symlink)
-        abort "E: can't create symlink #{soft_executable_symlink} "+
-          "pointing to #{soft_executable_path}"
-      end
+      installed_bin_path = "#{installed_path}/00bin"
+      soft_executable_symlink = "#{installed_bin_path}/#{symlink}"
+      x__abort_unless_symlink_create(soft_executable_path,
+                                     soft_executable_symlink, true)
+
+      x__abort_unless_chdir(installed_bin_path)
+      x__abort_unless_symlink_create(symlink, "blender", true)
       puts "I: installed: blender #{@version} for #{@platform} ..."
     end
   end
