@@ -8,8 +8,8 @@ module X module Users
 
     def initialize(a_argv)
       x__load_modules([:standard, :online])
-      @usage_path_rel = '../../../data/0x1/install/blender_usage'
-      @data_path_rel = '../../../data/0x1/install/blender_install.json'
+      @usage_path_rel = '../../../data/0x1/users/blender_install_usage'
+      @data_path_rel = '../../../data/0x1/users/blender_install_data.json'
       @soft_name = 'blender'
       soft_install_data_load()
       arguments_process(a_argv)
