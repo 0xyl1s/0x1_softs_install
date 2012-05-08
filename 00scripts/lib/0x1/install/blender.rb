@@ -31,7 +31,7 @@ module X module Users
         platforms = list_platforms(@version)
         @platform = x__select_item(platforms, "platform? ")
         @overwrite_symlink = x__confirm("\nOverwrite #{@soft_name} symlink"+
-                                        " if needed? ")
+                                        " if needed (y/n)? ")
       when 3
         arg1 = ARGV[0].to_sym
         if list_versions().include?(arg1)
@@ -56,8 +56,6 @@ module X module Users
         else
           abort "E: overwrite_symlink must be true or false (#{arg3})."
         end
-        @soft_ver_name = "#{@soft_name}_#{@version}_#{@platform}"
-        @soft_ver_path = "#{@soft_name}/#{@version}/#{@platform}"
       else
         abort "E: please provide 3 arguments (version / platform /"+
           " overwrite_symlink)"
@@ -81,6 +79,8 @@ module X module Users
     end
 
     def install_process()
+      @soft_ver_name = "#{@soft_name}_#{@version}_#{@platform}"
+      @soft_ver_path = "#{@soft_name}/#{@version}/#{@platform}"
       @uri_raw = @soft_install_data[@version][@platform][0]
       @digest_type = @soft_install_data[@version][@platform][1]
       @digest_source = @soft_install_data[@version][@platform][2]
