@@ -1,5 +1,6 @@
 # encoding: utf-8
 # tested with ruby 1.9.3
+# test >> ../../../tests/0x1/users/blender_install.rb
 
 module X module Users
   require_relative '../0x1_lib.helper.rb'
