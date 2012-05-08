@@ -30,15 +30,17 @@ module X module Users
         @version = x__select_item(versions, "#{@soft_name} version? ")
         platforms = list_platforms(@version)
         @platform = x__select_item(platforms, "platform? ")
-      when 2
+        @overwrite_symlink = x__confirm("\nOverwrite #{@soft_name} symlink"+
+                                        " if needed? ")
+      when 3
         arg1 = ARGV[0].to_sym
-        arg2 = ARGV[1].to_sym
         if list_versions().include?(arg1)
           @version = arg1
         else
           abort "E: arg1 (#{arg1}) is not a valid version "+
             "(#{list_versions().join(' ')})"
         end
+        arg2 = ARGV[1].to_sym
         available_platforms = list_platforms(@version)
         if available_platforms.include?(arg2)
           @platform = arg2
@@ -46,8 +48,19 @@ module X module Users
           abort "E: arg2 (#{arg2}) is not a valid platform for version "+
             "#{@version} (#{available_platforms.join(' ')})"
         end
+        arg3 = ARGV[2]
+        if arg3 == 'true'
+          @overwrite_symlink = true
+        elsif arg3 == 'false'
+          @overwrite_symlink = false
+        else
+          abort "E: overwrite_symlink must be true or false (#{arg3})."
+        end
+        @soft_ver_name = "#{@soft_name}_#{@version}_#{@platform}"
+        @soft_ver_path = "#{@soft_name}/#{@version}/#{@platform}"
       else
-        abort "E: please provide 2 arguments (version / platform)"
+        abort "E: please provide 3 arguments (version / platform /"+
+          " overwrite_symlink)"
       end
     end
 
@@ -68,40 +81,40 @@ module X module Users
     end
 
     def install_process()
-      uri_raw = @soft_install_data[@version][@platform][0]
-      uri = x__parse_uri(uri_raw)
+      @uri_raw = @soft_install_data[@version][@platform][0]
+      @digest_type = @soft_install_data[@version][@platform][1]
+      @digest_source = @soft_install_data[@version][@platform][2]
+
+      uri = x__parse_uri(@uri_raw)
       downloaded_filename = x__filename_from_parsed_uri(uri)
       downloaded_file_extension = '.tar.bz2'
       downloaded_basename = File.basename(downloaded_filename,
                                           downloaded_file_extension)
+
       installed_path = "#{Dir.home}/.0x1/00mu/00sourcing/0x1_softs_installed"
-      soft_ver_path = "#{@soft_name}/#{@version}/#{@platform}"
-      install_path = "#{installed_path}/#{@soft_name}/"+
-      "#{@version}/#{@platform}/00install"
+      install_path = "#{installed_path}/#{@soft_ver_path}/00install"
       x__abort_if_is_a_dir(install_path, true)
       soft_downloaded_path = "#{install_path}/#{downloaded_filename}"
-      digest_source = @soft_install_data[@version][@platform][1]
-      soft_extract_dir_path = "#{installed_path}/#{soft_ver_path}/00install/"+
-      "#{downloaded_basename}"
+      soft_extract_dir_path = "#{installed_path}/#{@soft_ver_path}/"+
+      "00install/#{downloaded_basename}"
       x__abort_if_is_a_dir(soft_extract_dir_path, true)
-      soft_installed_dir_path = "#{installed_path}/#{soft_ver_path}"+
+      soft_installed_dir_path = "#{installed_path}/#{@soft_ver_path}"+
       "/00installed"
       x__abort_if_is_a_dir(soft_installed_dir_path, true)
       soft_executable_path = "#{soft_installed_dir_path}/#{@soft_name}"
-      soft_ver_name = "#{@soft_name}_#{@version}_#{@platform}"
       installed_bin_path = "#{installed_path}/00bin"
-      soft_executable_symlink = "#{installed_bin_path}/#{soft_ver_name}"
+      soft_executable_symlink = "#{installed_bin_path}/#{@soft_ver_name}"
 
       puts "I: starting installation: #{@soft_name} #{@version} for "+
       "#{@platform}..."
 
       x__abort_unless_mkdir_p(install_path, true)
 
-      x__abort_unless_download_file_check_digest(uri_raw,
+      x__abort_unless_download_file_check_digest(@uri_raw,
                                                  downloaded_filename,
                                                  install_path,
-                                                 'sha256',
-                                                 digest_source,
+                                                 @digest_type,
+                                                 @digest_source,
                                                  true)
 
       x__abort_unless_extract_tarbz2(soft_downloaded_path, install_path, true)
@@ -113,7 +126,14 @@ module X module Users
                                      soft_executable_symlink, true)
 
       x__abort_unless_chdir(installed_bin_path)
-      x__abort_unless_symlink_create(soft_ver_name, @soft_name, true)
+
+      if x__is_a_symlink?(@soft_name) and @overwrite_symlink
+        x__abort_unless_symlink_delete(@soft_name, true)
+      end
+      unless x__is_a_symlink?(@soft_name)
+        x__abort_unless_symlink_create(@soft_ver_name, @soft_name, true)
+      end
+
       puts "\nI: installed: #{@soft_name} #{@version} for #{@platform} ..."
     end
   end
