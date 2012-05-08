@@ -8,12 +8,6 @@ module X module Users
 
     def initialize(a_argv)
       x__load_modules([:standard, :online])
-      @usage_path_abs = x__rel_abs_path(__FILE__,
-                                        '../../../data/0x1/install/'+
-                                        'blender_usage')
-      @data_path_abs = x__rel_abs_path(__FILE__,
-                                       '../../../data/0x1/install/'+
-                                       'blender_install.json')
       soft_install_data_load()
       @soft_name = 'blender'
       arguments_process(a_argv)
@@ -21,6 +15,12 @@ module X module Users
     end
 
     private
+
+    def usage()
+      usage_path_rel = '../../../data/0x1/install/blender_usage'
+      usage_path_abs = x__rel_abs_path(__FILE__, usage_path_rel)
+      x__file_read(usage_path_abs)
+    end
 
     def arguments_process(a_args)
       abort usage() if a_args.join == 'help'
@@ -63,11 +63,9 @@ module X module Users
     end
 
     def soft_install_data_load()
-      @soft_install_data = x__json_read(@data_path_abs, true)
-    end
-
-    def usage()
-      x__file_read(usage_path_abs)
+      data_path_rel = '../../../data/0x1/install/blender_install.json'
+      data_path_abs = x__rel_abs_path(__FILE__, data_path_rel)
+      @soft_install_data = x__json_read(data_path_abs, true)
     end
 
     def list_versions()

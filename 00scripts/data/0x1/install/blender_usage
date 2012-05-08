@@ -1,1 +1,1 @@
-BlenderInstall [blender_version] [platform]
+BlenderInstall [blender_version] [platform] [overwrite_symlink]
