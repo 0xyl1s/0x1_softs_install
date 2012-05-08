@@ -5,7 +5,11 @@ module X module Users
   require 'minitest/autorun'
 
   class TestBlenderInstall < MiniTest::Unit::TestCase
-  require_relative '../../../lib/0x1/users/blender_install.rb'
+    require_relative '../../../lib/0x1/users/blender_install.rb'
+
+    def setup
+      @blender_install = BlenderInstall.new("v263", "linux_x86_64", "true")
+    end
 
     def test_initialize
       skip("first step...")
