@@ -8,17 +8,18 @@ module X module Users
 
     def initialize(a_argv)
       x__load_modules([:standard, :online])
-      soft_install_data_load()
+      @usage_path_rel = '../../../data/0x1/install/blender_usage'
+      @data_path_rel = '../../../data/0x1/install/blender_install.json'
       @soft_name = 'blender'
+      soft_install_data_load()
       arguments_process(a_argv)
-      install_process()
+      run()
     end
 
     private
 
     def usage()
-      usage_path_rel = '../../../data/0x1/install/blender_usage'
-      usage_path_abs = x__rel_abs_path(__FILE__, usage_path_rel)
+      usage_path_abs = x__abort_unless_rel_abs_path(__FILE__, @usage_path_rel)
       x__file_read(usage_path_abs)
     end
 
@@ -63,8 +64,7 @@ module X module Users
     end
 
     def soft_install_data_load()
-      data_path_rel = '../../../data/0x1/install/blender_install.json'
-      data_path_abs = x__rel_abs_path(__FILE__, data_path_rel)
+      data_path_abs = x__abort_unless_rel_abs_path(__FILE__, @data_path_rel)
       @soft_install_data = x__json_read(data_path_abs, true)
     end
 
@@ -76,7 +76,7 @@ module X module Users
       @soft_install_data[l_version].keys
     end
 
-    def install_process()
+    def run()
       @soft_ver_name = "#{@soft_name}_#{@version}_#{@platform}"
       @soft_ver_path = "#{@soft_name}/#{@version}/#{@platform}"
       @uri_raw = @soft_install_data[@version][@platform][0]
