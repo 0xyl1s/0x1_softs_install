@@ -1,6 +1,6 @@
 # encoding: utf-8
 # tested with ruby 1.9.3
-# test >> ../../../tests/0x1/users/test_blender_install.rb
+# 0x1test >> ../../../tests/0x1/users/test_blender_install.rb
 
 module X module Users
   require_relative '../0x1_lib.helper.rb'
@@ -92,14 +92,14 @@ module X module Users
         @overwrite_symlink = x__confirm("\nOverwrite #{@soft_name} symlink"+
                                         " if needed (y/n)? ")
       when 3
-        arg1 = ARGV[0].to_sym
+        arg1 = a_args[0].to_sym
         if list_versions().include?(arg1)
           @version = arg1
         else
           abort "E: arg1 (#{arg1}) is not a valid version "+
             "(#{list_versions().join(' ')})"
         end
-        arg2 = ARGV[1].to_sym
+        arg2 = a_args[1].to_sym
         available_platforms = list_platforms(@version)
         if available_platforms.include?(arg2)
           @platform = arg2
@@ -107,7 +107,7 @@ module X module Users
           abort "E: arg2 (#{arg2}) is not a valid platform for version "+
             "#{@version} (#{available_platforms.join(' ')})"
         end
-        arg3 = ARGV[2]
+        arg3 = a_args[2]
         if arg3 == 'true'
           @overwrite_symlink = true
         elsif arg3 == 'false'
