@@ -1,19 +1,24 @@
 # encoding: utf-8
 # tested with ruby 1.9.3
-# 0x1test >> ../../../tests/0x1/users/test_blender_install.rb
 
-module X module Users
+module X module SoftsInstall
   require_relative '../0x1_lib.helper.rb'
 
   class BlenderInstall
+    include X::Lib::Toolkit::Standard
 
     def initialize(a_argv)
-      x__load_modules([:standard, :online])
-      @usage_path_rel = '../../../data/0x1/users/blender_install_usage'
-      @data_path_rel = '../../../data/0x1/users/blender_install_data.json'
+      puts '1'
+      @x_lib_path_base = X_LIB_PATH_BASE
+      x__lib_load_modules([:standard, :online])
+      @usage_path_rel = '../../../../data/0x1_softs_install/users/blender_install_usage'
+      @data_path_rel = '../../../../data/0x1_softs_install/users/blender_install_data.json'
       @soft_name = 'blender'
+      puts '2'
       soft_install_data_load()
+      puts '3'
       arguments_process(a_argv)
+      puts '4'
     end
 
     def run()
@@ -122,8 +127,14 @@ module X module Users
     end
 
     def soft_install_data_load()
+      puts x__
+      puts 'a'
+      puts "@data_path_rel = #{@data_path_rel}"
       data_path_abs = x__abort_unless_rel_abs_path(__FILE__, @data_path_rel)
+      puts "data_path_abs = #{data_path_abs}"
+      puts 'b'
       @soft_install_data = x__json_read(data_path_abs, true)
+      puts 'c'
     end
 
     def list_versions()

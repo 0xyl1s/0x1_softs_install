@@ -22,5 +22,11 @@
 	    ["http://download.blender.org/release/Blender2.63/blender-2.63a-linux-glibc27-x86_64.tar.bz2",
 	    "sha256",
 	    "4961b7004cd1aa86462938b3c6c9187eb7eadc865238d031d5508803999e8c5f"]
+	},
+    "v264":
+	{"linux_x86_64":
+	    ["http://download.blender.org/release/Blender2.64/blender-2.64-linux-glibc27-x86_64.tar.bz2",
+	    "sha256",
+	    "eefddbf1d9f11311ac04786cb8d4af8132fb9293d028edfc9ff26f86561b0a5c"]
 	}
 }
