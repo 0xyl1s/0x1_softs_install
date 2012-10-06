@@ -123,9 +123,7 @@ module X module SoftsInstall
     end
 
     def soft_install_data_load()
-      puts "@data_path_rel = #{@data_path_rel}"
       data_path_abs = x__abort_unless_rel_abs_path(__FILE__, @data_path_rel)
-      puts "data_path_abs = #{data_path_abs}"
       @soft_install_data = x__json_read(data_path_abs, true)
     end
 
