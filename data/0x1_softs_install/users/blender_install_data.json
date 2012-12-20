@@ -23,10 +23,10 @@
 	    "sha256",
 	    "47406b31baba868378248b74030bb14a6a4224f0f78e838e281e10ea18b53adf"]
 	},
-    "v265":
+    "v265a":
 	{"linux_x86_64":
-	    ["http://download.blender.org/release/Blender2.65/blender-2.65-linux-glibc211-x86_64.tar.bz2",
+	    ["http://download.blender.org/release/Blender2.65/blender-2.65a-linux-glibc211-x86_64.tar.bz2",
 	    "sha256",
-	    "7b149bbde915be4c1caa924eb80f3caab2482b561d651ed8c67614bd181e7d57"]
+	    "3d7c7b180346a1ef9b67991917ccd971ab2feb8ee5ec7c1e92b9680179f31044"]
 	}
 }
