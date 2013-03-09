@@ -28,5 +28,11 @@
 	    ["http://download.blender.org/release/Blender2.65/blender-2.65a-linux-glibc211-x86_64.tar.bz2",
 	    "sha256",
 	    "3d7c7b180346a1ef9b67991917ccd971ab2feb8ee5ec7c1e92b9680179f31044"]
+	},
+    "v266a":
+	{"linux_x86_64":
+	    ["http://download.blender.org/release/Blender2.66/blender-2.66a-linux-glibc211-x86_64.tar.bz2",
+	    "sha256",
+	    "d4482f4cbf9cb0299a1324f072c57e2a9f8a1c469d867ecf95e922f91ff94e6a"]
 	}
 }
